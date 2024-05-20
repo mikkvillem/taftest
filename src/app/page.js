@@ -66,7 +66,7 @@ export default function Home() {
         onSubmit={() => {
           /* add feed to localStorage */
         }}
-        customFeeds={JSON.parse(localStorage.getItem('feeds')) || []}
+        customFeeds={/* JSON.parse(localStorage.getItem('feeds')) || */ []}
         handleDeleteFeed={() => {
           /* remove feed from localStorage */
         }}
