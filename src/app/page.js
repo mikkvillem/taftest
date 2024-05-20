@@ -28,8 +28,12 @@ export default function Home() {
   // to add feed: () => localStorage.setItem("feeds", [feedUrl, feedUrl2 etc])
   // https://www.freecodecamp.org/news/how-to-use-localstorage-with-react-hooks-to-set-and-get-items/
 
+  let feedUrl = defaultFeed;
+  if (typeof window !== 'undefined') {
+    feedUrl = JSON.parse(localStorage.getItem('feeds')) || defaultFeed;
+  }
+
   useEffect(() => {
-    const feedUrl = JSON.parse(localStorage.getItem('feeds')) || defaultFeed;
     fetchArticles(feedUrl).then((res) => {
       const formattedResponse = formatXMLData(res.data, feedUrl);
       return formattedResponse.then((data) => setArticles(data));
