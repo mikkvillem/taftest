@@ -1,0 +1,26 @@
+/* Article filter styling */
+.article-filter {
+    max-width: 550px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.article-filter label {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.article-filter select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

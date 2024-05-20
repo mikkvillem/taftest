@@ -1,0 +1,70 @@
+/* Custom RSS feed section styling */
+.custom-feeds-section {
+    max-width: 550px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Add feed form styling */
+.add-feed-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Add feed form input styling */
+.add-feed-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Add feed form button styling */
+.add-feed-form button,
+.delete-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Add feed form button hover styling */
+.add-feed-form button:hover,
+.delete-button:hover {
+    background-color: #0056b3;
+}
+
+/* Custom feed list styling */
+.custom-feeds-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Custom feed list item styling */
+.custom-feeds-section li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+
+/* Custom feed delete button styling */
+.custom-feeds-section .delete-button {
+    background-color: #dc3545;
+    margin-left: 10px;
+}
+
+/* Custom feed delete button hover styling */
+.custom-feeds-section .delete-button:hover {
+    background-color: #c82333;
+}
