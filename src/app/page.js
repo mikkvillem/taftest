@@ -96,13 +96,13 @@ export default function Home() {
     <main className={(styles.main, isModalOpen ? styles.scrollLock : '')}>
       <CustomRSSFeedsComponent
         onSubmit={(url) => {
-          if (typeof window !== 'undefined') {
-            const feedUrls = localStorage.getItem('feeds')
-              ? JSON.parse(localStorage.getItem('feeds'))
-              : defaultFeed;
-            const newFeedUrls = [...feedUrls, url];
-            return localStorage.setItem('feeds', JSON.stringify(newFeedUrls));
-          }
+          const feedUrls = localStorage.getItem('feeds')
+            ? JSON.parse(localStorage.getItem('feeds'))
+            : defaultFeed;
+          const newFeedUrls = [...feedUrls, url];
+          localStorage.setItem('feeds', JSON.stringify(newFeedUrls));
+          return document.location.reload();
+
           /* add feed to localStorage */
         }}
         customFeeds={/* JSON.parse(localStorage.getItem('feeds')) || */ []}
