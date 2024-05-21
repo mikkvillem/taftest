@@ -50,11 +50,13 @@ const ModalComponent = ({ isOpen, onRequestClose, content }) => {
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <div
-          className="modal-content"
-          ref={modalContentRef}
-          dangerouslySetInnerHTML={{ __html: content.content }}
-        />
+        <div className="modal-content">
+          <h2>{content.title}</h2>
+          <div
+            ref={modalContentRef}
+            dangerouslySetInnerHTML={{ __html: content.content }}
+          />
+        </div>
       )}
     </Modal>
   );

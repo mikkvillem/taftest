@@ -83,7 +83,7 @@ export default function Home() {
     return <div className={styles.main}>...Loading Articles</div>;
 
   return (
-    <main className={styles.main}>
+    <main className={(styles.main, isModalOpen && styles.scrollLock)}>
       <CustomRSSFeedsComponent
         onSubmit={() => {
           /* add feed to localStorage */
@@ -97,20 +97,18 @@ export default function Home() {
         categories={categories}
         onFilterChange={handleFilterChange}
       />
-      <div className="container">
-        <div className="articles-container">
-          {filteredArticles.map((article, index) => {
-            return (
-              <Article
-                key={index}
-                article={article}
-                onArticleClick={() => {
-                  handleArticleClick(article.link);
-                }}
-              />
-            );
-          })}
-        </div>
+      <div className={styles.grid}>
+        {filteredArticles.map((article, index) => {
+          return (
+            <Article
+              key={index}
+              article={article}
+              onArticleClick={() => {
+                handleArticleClick(article.link);
+              }}
+            />
+          );
+        })}
       </div>
       <ModalComponent
         isOpen={isModalOpen}
