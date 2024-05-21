@@ -9,7 +9,7 @@ import CustomRSSFeedsComponent from './components/CustomRSSFeedsComponent';
 import ArticleFilterComponent from './components/ArticleFilterComponent';
 import ModalComponent from './components/ModalComponent';
 
-const defaultFeed = 'https://flipboard.com/@raimoseero/feed-nii8kd0sz.rss';
+const defaultFeed = ['https://flipboard.com/@raimoseero/feed-nii8kd0sz.rss'];
 
 const fetchArticles = async (feedUrl) => {
   try {
@@ -31,18 +31,28 @@ export default function Home() {
   // to add feed: () => localStorage.setItem("feeds", [feedUrl, feedUrl2 etc])
   // https://www.freecodecamp.org/news/how-to-use-localstorage-with-react-hooks-to-set-and-get-items/
 
-  let feedUrl = defaultFeed;
+  let feedUrls = defaultFeed;
   if (typeof window !== 'undefined') {
-    feedUrl = JSON.parse(localStorage.getItem('feeds')) || defaultFeed;
+    feedUrls = localStorage.getItem('feeds')
+      ? [...feedUrls, ...JSON.parse(localStorage.getItem('feeds'))]
+      : defaultFeed;
   }
 
   useEffect(() => {
-    fetchArticles(feedUrl)
-      .then((res) => {
-        const formattedResponse = formatXMLData(res.data, feedUrl);
-        return formattedResponse.then((data) => setArticles(data));
-      })
-      .finally(setArticlesLoading(false));
+    try {
+      feedUrls.forEach((feedUrl) => {
+        fetchArticles(feedUrl).then((res) => {
+          const formattedResponse = formatXMLData(res.data, feedUrl);
+          return formattedResponse.then((data) =>
+            setArticles((prev) => [...prev, ...data])
+          );
+        });
+      });
+    } catch (error) {
+      console.log('error fetching feeds');
+    } finally {
+      setArticlesLoading(false);
+    }
   }, []);
 
   const categories = articles.reduce((acc, article) => {
@@ -83,9 +93,16 @@ export default function Home() {
     return <div className={styles.main}>...Loading Articles</div>;
 
   return (
-    <main className={(styles.main, isModalOpen && styles.scrollLock)}>
+    <main className={(styles.main, isModalOpen ? styles.scrollLock : '')}>
       <CustomRSSFeedsComponent
-        onSubmit={() => {
+        onSubmit={(url) => {
+          if (typeof window !== 'undefined') {
+            const feedUrls = localStorage.getItem('feeds')
+              ? JSON.parse(localStorage.getItem('feeds'))
+              : defaultFeed;
+            const newFeedUrls = [...feedUrls, url];
+            return localStorage.setItem('feeds', JSON.stringify(newFeedUrls));
+          }
           /* add feed to localStorage */
         }}
         customFeeds={/* JSON.parse(localStorage.getItem('feeds')) || */ []}
