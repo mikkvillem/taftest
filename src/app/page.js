@@ -7,6 +7,8 @@ import { useState } from 'react';
 import Article from './components/Article';
 import CustomRSSFeedsComponent from './components/CustomRSSFeedsComponent';
 import ArticleFilterComponent from './components/ArticleFilterComponent';
+import ModalComponent from './components/ModalComponent';
+
 const defaultFeed = 'https://flipboard.com/@raimoseero/feed-nii8kd0sz.rss';
 
 const fetchArticles = async (feedUrl) => {
@@ -21,6 +23,7 @@ const fetchArticles = async (feedUrl) => {
 
 export default function Home() {
   const [articles, setArticles] = useState([]);
+  const [articlesLoading, setArticlesLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -34,10 +37,12 @@ export default function Home() {
   }
 
   useEffect(() => {
-    fetchArticles(feedUrl).then((res) => {
-      const formattedResponse = formatXMLData(res.data, feedUrl);
-      return formattedResponse.then((data) => setArticles(data));
-    });
+    fetchArticles(feedUrl)
+      .then((res) => {
+        const formattedResponse = formatXMLData(res.data, feedUrl);
+        return formattedResponse.then((data) => setArticles(data));
+      })
+      .finally(setArticlesLoading(false));
   }, []);
 
   const categories = articles.reduce((acc, article) => {
@@ -57,9 +62,26 @@ export default function Home() {
       )
     );
   });
+
   const handleFilterChange = (category) => {
     setSelectedCategories(category ? [category] : []);
   };
+
+  const handleArticleClick = async (url) => {
+    try {
+      setIsModalOpen(true);
+      const response = await fetch('/api/article?url=' + url);
+      const responseJSON = await response.json();
+      setModalContent(responseJSON.data);
+    } catch (error) {
+      console.error('Error fetching article content:', error);
+      setIsModalOpen(false);
+    }
+  };
+
+  if (articlesLoading === true)
+    return <div className={styles.main}>...Loading Articles</div>;
+
   return (
     <main className={styles.main}>
       <CustomRSSFeedsComponent
@@ -77,11 +99,24 @@ export default function Home() {
       />
       <div className="container">
         <div className="articles-container">
-          {filteredArticles.map((article, index) => (
-            <Article key={index} article={article} onArticleClick={() => {}} />
-          ))}
+          {filteredArticles.map((article, index) => {
+            return (
+              <Article
+                key={index}
+                article={article}
+                onArticleClick={() => {
+                  handleArticleClick(article.link);
+                }}
+              />
+            );
+          })}
         </div>
       </div>
+      <ModalComponent
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        content={modalContent}
+      />
     </main>
   );
 }
